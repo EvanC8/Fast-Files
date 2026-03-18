@@ -87,7 +87,7 @@ export default function DownloadPage() {
             <p className="text-zinc-500 text-sm mb-5">Enter the 8-character code to download.</p>
 
             {/* Code input */}
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <input
                 type="text"
                 value={code}
@@ -95,12 +95,12 @@ export default function DownloadPage() {
                 onKeyDown={(e) => e.key === 'Enter' && handleDownload()}
                 placeholder="XXXXXXXX"
                 maxLength={8}
-                className="flex-1 bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-xl px-4 py-3 text-center text-xl font-mono tracking-[0.2em] text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors uppercase"
+                className="flex-1 bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-xl px-4 py-3 text-center text-lg font-mono tracking-[0.15em] text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors uppercase"
               />
               <button
                 onClick={handleDownload}
                 disabled={!code.trim() || loading}
-                className="px-5 py-3 bg-indigo-600 text-white rounded-xl text-sm font-medium hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="w-full sm:w-auto px-5 py-3 bg-indigo-600 text-white rounded-xl text-sm font-medium hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 {loading ? (
                   <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
