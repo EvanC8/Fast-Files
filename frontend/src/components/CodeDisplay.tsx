@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import QRCode from 'qrcode'
 
 interface CodeDisplayProps {
@@ -8,12 +8,13 @@ interface CodeDisplayProps {
 
 export default function CodeDisplay({ code, downloadUrl }: CodeDisplayProps) {
   const [copied, setCopied] = useState(false)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [qrDataUrl, setQrDataUrl] = useState('')
 
   useEffect(() => {
-    if (canvasRef.current) {
-      QRCode.toCanvas(canvasRef.current, downloadUrl, { width: 160, margin: 2 })
-    }
+    if (!downloadUrl) return
+    QRCode.toDataURL(downloadUrl, { width: 160, margin: 2, errorCorrectionLevel: 'M' })
+      .then(setQrDataUrl)
+      .catch(console.error)
   }, [downloadUrl])
 
   const copy = () => {
@@ -25,14 +26,14 @@ export default function CodeDisplay({ code, downloadUrl }: CodeDisplayProps) {
   return (
     <div className="flex flex-col items-center gap-5 w-full">
       {/* Code row */}
-      <div className="w-full flex items-center gap-3 bg-zinc-800 border border-zinc-700 rounded-xl px-5 py-4">
-        <span className="flex-1 text-center text-4xl font-bold tracking-[0.25em] font-mono text-white">
+      <div className="w-full flex items-center gap-3 bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-xl px-5 py-4">
+        <span className="flex-1 text-center text-3xl sm:text-4xl font-bold tracking-[0.25em] font-mono text-zinc-900 dark:text-white">
           {code}
         </span>
         <button
           onClick={copy}
           title="Copy code"
-          className="shrink-0 p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors"
+          className="shrink-0 p-2 rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
         >
           {copied ? (
             <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -50,9 +51,9 @@ export default function CodeDisplay({ code, downloadUrl }: CodeDisplayProps) {
       {/* QR code */}
       <div className="flex flex-col items-center gap-2">
         <div className="bg-white p-3 rounded-xl shadow-lg">
-          <canvas ref={canvasRef} />
+          {qrDataUrl && <img src={qrDataUrl} width={160} height={160} alt="QR code" />}
         </div>
-        <p className="text-zinc-600 text-xs">Scan on another device</p>
+        <p className="text-zinc-400 dark:text-zinc-600 text-xs">Scan on another device</p>
       </div>
     </div>
   )

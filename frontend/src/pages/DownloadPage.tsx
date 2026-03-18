@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import JSZip from 'jszip'
 import { downloadFiles } from '../lib/api'
+import { useTheme } from '../hooks/useTheme'
 
 export default function DownloadPage() {
   const [searchParams] = useSearchParams()
@@ -10,6 +11,7 @@ export default function DownloadPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [zipping, setZipping] = useState(false)
+  const { isDark, toggle } = useTheme()
 
   const handleDownload = async () => {
     if (!code.trim()) return
@@ -49,20 +51,39 @@ export default function DownloadPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col">
+    <div className="min-h-screen bg-slate-50 dark:bg-zinc-950 flex flex-col">
       {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4 border-b border-zinc-800/60">
-        <span className="text-white font-semibold tracking-tight">Transfer</span>
-        <Link to="/" className="text-zinc-400 text-sm hover:text-zinc-200 transition-colors">
-          ← Send files
-        </Link>
+      <header className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-zinc-200/60 dark:border-zinc-800/60">
+        <span className="text-zinc-900 dark:text-white font-semibold tracking-tight">Transfer</span>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={toggle}
+            title="Toggle theme"
+            className="p-2 rounded-lg text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+          >
+            {isDark ? (
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+                  d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+              </svg>
+            ) : (
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+                  d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+              </svg>
+            )}
+          </button>
+          <Link to="/" className="text-zinc-500 dark:text-zinc-400 text-sm hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors">
+            ← Send files
+          </Link>
+        </div>
       </header>
 
       {/* Main */}
-      <main className="flex-1 flex items-center justify-center p-6">
+      <main className="flex-1 flex items-center justify-center p-4 sm:p-6">
         <div className="w-full max-w-md">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
-            <h1 className="text-white font-semibold text-lg mb-1">Receive files</h1>
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-4 sm:p-6">
+            <h1 className="text-zinc-900 dark:text-white font-semibold text-lg mb-1">Receive files</h1>
             <p className="text-zinc-500 text-sm mb-5">Enter the 8-character code to download.</p>
 
             {/* Code input */}
@@ -74,7 +95,7 @@ export default function DownloadPage() {
                 onKeyDown={(e) => e.key === 'Enter' && handleDownload()}
                 placeholder="XXXXXXXX"
                 maxLength={8}
-                className="flex-1 bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-center text-xl font-mono tracking-[0.2em] text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors uppercase"
+                className="flex-1 bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-xl px-4 py-3 text-center text-xl font-mono tracking-[0.2em] text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors uppercase"
               />
               <button
                 onClick={handleDownload}
@@ -109,12 +130,12 @@ export default function DownloadPage() {
                 </p>
                 <ul className="space-y-2">
                   {result.signedUrls.map((url, i) => (
-                    <li key={i} className="flex items-center gap-3 bg-zinc-800 border border-zinc-700/50 rounded-xl px-4 py-3">
+                    <li key={i} className="flex items-center gap-3 bg-zinc-100 dark:bg-zinc-800 border border-zinc-300/50 dark:border-zinc-700/50 rounded-xl px-4 py-3">
                       <svg className="w-4 h-4 text-zinc-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
                           d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m.75 12l3 3m0 0l3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                       </svg>
-                      <span className="text-sm text-zinc-200 truncate flex-1">{result.filenames[i]}</span>
+                      <span className="text-sm text-zinc-700 dark:text-zinc-200 truncate flex-1">{result.filenames[i]}</span>
                       <a
                         href={url}
                         download={result.filenames[i]}
@@ -129,7 +150,7 @@ export default function DownloadPage() {
                   <button
                     onClick={downloadAll}
                     disabled={zipping}
-                    className="mt-3 w-full py-3 bg-zinc-800 border border-zinc-700 text-zinc-200 rounded-xl text-sm font-medium hover:bg-zinc-700 disabled:opacity-40 transition-colors"
+                    className="mt-3 w-full py-3 bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-200 rounded-xl text-sm font-medium hover:bg-zinc-200/70 dark:hover:bg-zinc-700 disabled:opacity-40 transition-colors"
                   >
                     {zipping ? 'Zipping…' : 'Download all as ZIP'}
                   </button>

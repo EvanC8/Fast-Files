@@ -25,7 +25,7 @@ export default function CountdownTimer({ seconds, onExpired }: CountdownTimerPro
     <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono border transition-colors ${
       urgent
         ? 'bg-red-500/10 text-red-400 border-red-500/20'
-        : 'bg-zinc-800 text-zinc-400 border-zinc-700'
+        : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 border-zinc-300 dark:border-zinc-700'
     }`}>
       <span className={`w-1.5 h-1.5 rounded-full bg-current ${urgent ? 'animate-pulse' : ''}`} />
       Expires in {mins}:{secs}
