@@ -67,7 +67,8 @@ Deno.serve(async (req) => {
   const filePaths: string[] = []
 
   for (const file of files) {
-    const path = `${code}/${file.name}`
+    const safeName = file.name.replace(/\s+/g, '_')
+    const path = `${code}/${safeName}`
     const buffer = await file.arrayBuffer()
 
     const { error } = await supabase.storage
